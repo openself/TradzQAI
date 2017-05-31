@@ -114,9 +114,9 @@ model = build_model2([3,window,1])
 model.fit(
         X_train,
         y_train,
-        batch_size=1024,
-        epochs=500,
-        validation_split=0.1,
+        batch_size=512,
+        epochs=250,
+        validation_split=0.2,
         verbose=1)
 
 trainScore = model.evaluate(X_train, y_train, verbose=0)
@@ -132,6 +132,8 @@ for u in range(len(y_test)):
     pr = p[u][0]
     ratio.append((y_test[u]/pr)-1)
     diff.append(abs(y_test[u]- pr))
+
+print(p)
 
 plt.plot(p,color='red', label='prediction')
 plt.plot(y_test,color='blue', label='y_test')
