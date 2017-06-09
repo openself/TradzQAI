@@ -12,6 +12,7 @@ from math import sqrt
 from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation
 from keras.layers.recurrent import LSTM
+import os
 
                                 
 #Import csv file + traitement     
@@ -109,14 +110,23 @@ print("y_test", y_test.shape)
 #Training       
                 
 
+saved_weights = 'StockLSTM.HDF5'
+
 model = build_model2([3,window,1])
+
+if (os.path.isfile(saved_weights)):
+    model.load_weights(saved_weights)
+else :
+     open(saved_weights, 'w')
 
 model.fit(  X_train,
             y_train, 
             batch_size=512,
-            epochs=500,
+            epochs=20,
             validation_split=0.1,
             verbose=1)
+
+model.save_weights(saved_weights)
 
                 
 #print score    
