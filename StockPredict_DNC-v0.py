@@ -18,7 +18,7 @@ from keras.layers.recurrent import LSTM
                                 
 
 def get_stock_data(stock_name, normalized=0):
-    location = './Datasets/Stock_price/googl.csv'
+    location = './Datasets/Stock_price/googl1k.csv'
 
     col_names = ['Date','Open','High','Low','Close','Volume']
     stocks = pd.read_csv(location, header=0, names=col_names)
@@ -81,18 +81,18 @@ def load_data(stock, seq_len):
     #start = time.time()
     #model.compile(loss="mse", optimizer="rmsprop",metrics=['accuracy'])
     #print("Compilation Time : ", time.time() - start)
-    #return modeli
+    #return model
 
     ###
 
 def build_model2(layers):
-    d = 0.2
+    d = 0.1
     model = Sequential()
-    model.add(LSTM(128, input_shape=(layers[1], layers[0]), return_sequences=True))
+    model.add(LSTM(256, input_shape=(layers[1], layers[0]), return_sequences=True))
     model.add(Dropout(d))
-    model.add(LSTM(64, input_shape=(layers[1], layers[0]), return_sequences=False))
+    model.add(LSTM(128, input_shape=(layers[1], layers[0]), return_sequences=False))
     model.add(Dropout(d))
-    model.add(Dense(16, kernel_initializer='glorot_uniform', activation='relu'))
+    model.add(Dense(64, kernel_initializer='glorot_uniform', activation='relu'))
     model.add(Dense(1, kernel_initializer='glorot_uniform', activation='linear'))
     model.compile(loss='mse',optimizer='adam',metrics=['accuracy'])
     return model
@@ -111,13 +111,16 @@ print("y_test", y_test.shape)
 
 model = build_model2([3,window,1])
 
-model.fit(
-        X_train,
-        y_train,
-        batch_size=512,
-        epochs=500,
-        validation_split=0.1,
-        verbose=1)
+model.fit(  X_train,
+            y_train, 
+            batch_size=512,
+            epochs=500,
+            validation_split=0.1,
+            verbose=1)
+
+                
+#print score    
+                
 
 trainScore = model.evaluate(X_train, y_train, verbose=0)
 print('Train Score: %.2f MSE (%.2f RMSE)' % (trainScore[0], math.sqrt(trainScore[0])))
@@ -132,8 +135,6 @@ for u in range(len(y_test)):
     pr = p[u][0]
     ratio.append((y_test[u]/pr)-1)
     diff.append(abs(y_test[u]- pr))
-
-print(p)
 
 plt.plot(p,color='red', label='prediction')
 plt.plot(y_test,color='blue', label='y_test')
