@@ -40,12 +40,14 @@ df['Close'] = df['Close'] / 100
 #df['Low'] = df['Low'] / 100
 
 def load_data(stock, seq_len):
+    print(stock)
     amount_of_features = len(stock.columns)
     data = stock.as_matrix() #pd.DataFrame(stock)
     sequence_length = seq_len + 1
     result = []
     for index in range(len(data) - sequence_length):
         result.append(data[index: index + sequence_length])
+    #print(result)
     result = np.array(result)
     row = round(0.9 * result.shape[0])
     train = result[:int(row), :]
@@ -82,42 +84,37 @@ print("y_test", y_test.shape)
 #Training       
                 
 
-saved_model = 'StockLSTM.HDF5'
+#saved_model = 'StockLSTM.HDF5'
 
-if (os.path.isfile(saved_model)):
-    model = load_model(saved_model)
-else :
-    model = build_model([3,window,1])
-    open(saved_model, 'w')
+#if (os.path.isfile(saved_model)):
+#    model = load_model(saved_model)
+#else :
+#    model = build_model([3,window,1])
+#    open(saved_model, 'w')
 
-model.fit(  X_train,
-            y_train,
-            batch_size=512,
-            epochs=100,
-            validation_split=0.2,
-            verbose=1)
+#model.fit(  X_train, y_train, batch_size=512, epochs=100, validation_split=0.2, verbose=1)
 
-model.save(saved_model)
+#model.save(saved_model)
 
                 
 #print score    
                 
 
-trainScore = model.evaluate(X_train, y_train, verbose=0)
-print('Train Score: %.2f MSE (%.2f RMSE)' % (trainScore[0], math.sqrt(trainScore[0])))
+#trainScore = model.evaluate(X_train, y_train, verbose=0)
+#print('Train Score: %.2f MSE (%.2f RMSE)' % (trainScore[0], math.sqrt(trainScore[0])))
 
-testScore = model.evaluate(X_test, y_test, verbose=0)
-print('Test Score: %.2f MSE (%.2f RMSE)' % (testScore[0], math.sqrt(testScore[0])))
+#testScore = model.evaluate(X_test, y_test, verbose=0)
+#print('Test Score: %.2f MSE (%.2f RMSE)' % (testScore[0], math.sqrt(testScore[0])))
 
-diff=[]
-ratio=[]
-p = model.predict(X_test)
-for u in range(len(y_test)):
-    pr = p[u][0]
-    ratio.append((y_test[u]/pr)-1)
-    diff.append(abs(y_test[u]- pr))
+#diff=[]
+#ratio=[]
+#p = model.predict(X_test)
+#for u in range(len(y_test)):
+    #pr = p[u][0]
+    #ratio.append((y_test[u]/pr)-1)
+    #diff.append(abs(y_test[u]- pr))
 
-plt.plot(p,color='red', label='prediction')
-plt.plot(y_test,color='blue', label='y_test')
-plt.legend(loc='upper left')
-plt.show()
+#plt.plot(p,color='red', label='prediction')
+#plt.plot(y_test,color='blue', label='y_test')
+#plt.legend(loc='upper left')
+#plt.show()
